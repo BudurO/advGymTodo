@@ -1,0 +1,57 @@
+import type { Todo } from "../domain/todo";
+import { Draggable } from "./dnd/Draggable";
+import { taskDragId } from "./dnd/ids";
+
+export function TaskCard({
+  task,
+  onToggle,
+  onDelete,
+}: {
+  task: Todo;
+  onToggle: (taskId: string) => void;
+  onDelete: (taskId: string) => void;
+}) {
+  return (
+    <Draggable id={taskDragId(task.id)}>
+      <div
+        className={`group flex items-center gap-2 rounded-xl border px-3 py-2 shadow-sm transition ${
+          task.isCompleted
+            ? "border-green-300 bg-green-50"
+            : "border-pink-200 bg-pink-50 hover:border-pink-300"
+        }`}
+      >
+        <button
+          type="button"
+          aria-label={
+            task.isCompleted ? "Mark as not completed" : "Mark as completed"
+          }
+          onClick={() => onToggle(task.id)}
+          className={`flex size-5 shrink-0 items-center justify-center rounded-full border-2 text-xs font-bold transition ${
+            task.isCompleted
+              ? "border-green-500 bg-green-500 text-white"
+              : "border-pink-400 bg-white text-transparent hover:text-pink-300"
+          }`}
+        >
+          ✓
+        </button>
+        <p
+          className={`min-w-0 break-words text-sm font-semibold ${
+            task.isCompleted
+              ? "text-green-700 line-through opacity-70"
+              : "text-pink-900"
+          }`}
+        >
+          {task.title}
+        </p>
+        <button
+          type="button"
+          aria-label="Delete task"
+          onClick={() => onDelete(task.id)}
+          className="ml-auto shrink-0 rounded-md p-1 text-pink-300 opacity-0 transition hover:bg-red-100 hover:text-red-500 group-hover:opacity-100"
+        >
+          ✕
+        </button>
+      </div>
+    </Draggable>
+  );
+}

@@ -5,6 +5,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Required for GitHub Pages: the site is served from /advGymTodo/
+  base: "/advGymTodo/",
   plugins: [
     tailwindcss(),
     react(),

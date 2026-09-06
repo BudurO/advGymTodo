@@ -73,7 +73,7 @@ export function TodoBoard({
         <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-pink-500">
           Weekly plan
         </h2>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+        <div className="grid grid-cols-1 gap-3  lg:grid-cols-2">
           {WEEKDAYS.map((day) => {
             const dayTasks = todos.filter((t) => t.day === day.day);
             return (

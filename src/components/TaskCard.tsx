@@ -35,7 +35,7 @@ export function TaskCard({
           ✓
         </button>
         <p
-          className={`min-w-0 break-words text-sm font-semibold ${
+          className={`min-w-0 flex-1 break-words text-sm font-semibold ${
             task.isCompleted
               ? "text-green-700 line-through opacity-70"
               : "text-pink-900"
@@ -47,7 +47,7 @@ export function TaskCard({
           type="button"
           aria-label="Delete task"
           onClick={() => onDelete(task.id)}
-          className="ml-auto shrink-0 rounded-md p-1 text-pink-300 opacity-0 transition hover:bg-red-100 hover:text-red-500 group-hover:opacity-100"
+          className="ml-auto shrink-0 rounded-md bg-pink-600 px-1.5 py-0.5 text-xs font-bold text-white shadow-sm transition hover:bg-pink-700 active:scale-95"
         >
           ✕
         </button>

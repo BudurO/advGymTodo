@@ -1,8 +1,11 @@
 import type { Todo } from "../domain/todo";
 
+// Legacy localStorage persistence. Only used to migrate previously saved
+// tasks into the database the first time a user signs in on this device.
+
 const STORAGE_KEY = "todos";
 
-export function loadTodos(): Todo[] {
+export function loadLocalTodos(): Todo[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
@@ -12,6 +15,6 @@ export function loadTodos(): Todo[] {
   }
 }
 
-export function saveTodos(todos: Todo[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+export function clearLocalTodos(): void {
+  localStorage.removeItem(STORAGE_KEY);
 }

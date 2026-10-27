@@ -1,77 +1,101 @@
-# React + TypeScript + Vite
+# advGymTodo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple weekly planner for gym workouts. Add your training tasks, drag each one onto a day of the week, and tick them off as you go. Tasks are saved to your account, so they sync across all your devices.
 
-Currently, two official plugins are available:
+**Live app:** https://buduro.github.io/advGymTodo/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Screenshots
 
-## React Compiler
+### Sign in
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+![Sign in screen](docs/screenshots/sign-in.png)
 
-Note: This will impact Vite dev & build performances.
+### Weekly board
 
-## Expanding the ESLint configuration
+![Weekly board](docs/screenshots/board.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Add tasks and keep them in an "Unassigned" pool until you decide on a day
+- Drag and drop tasks onto any day of the week (Saturday to Friday)
+- Mark tasks as completed and see a per-day progress count
+- Delete tasks you no longer need
+- Email and password accounts; each user only sees their own tasks
+- Works on desktop and mobile
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Tech stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- [React 19](https://react.dev) + [TypeScript](https://www.typescriptlang.org)
+- [Vite](https://vite.dev) for development and builds
+- [Tailwind CSS v4](https://tailwindcss.com) for styling
+- [dnd-kit](https://dndkit.com) for drag and drop
+- [Supabase](https://supabase.com) for authentication and the database
+- GitHub Actions + GitHub Pages for deployment
+
+## Project structure
 
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+src/
+  app/            App shell and page layout
+  features/
+    auth/         Sign in / sign up (api, components, hooks)
+    todos/        Tasks, weekly board, drag and drop (api, components, hooks, utils)
+  components/     Shared UI pieces (e.g. drag-and-drop wrappers)
+  lib/            Shared clients (Supabase)
 ```
+
+Each feature owns its own API calls, components, and hooks. Shared code lives in `components/` and `lib/`, and is imported with the `@/` alias.
+
+## Running locally
+
+Requirements: Node 22+ and [pnpm](https://pnpm.io).
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Then open http://localhost:5173/advGymTodo/
+
+Other scripts:
+
+```bash
+pnpm build     # type-check and build for production
+pnpm lint      # run ESLint
+pnpm preview   # preview the production build
+```
+
+## Supabase setup
+
+The app expects a `todos` table protected by Row Level Security, so users can only read and write their own rows.
+
+```sql
+create table public.todos (
+  id uuid primary key,
+  user_id uuid not null references auth.users (id) on delete cascade,
+  title text not null,
+  day text check (day in ('sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri')),
+  is_completed boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+alter table public.todos enable row level security;
+
+create policy "Users can read their own todos"
+  on public.todos for select using (auth.uid() = user_id);
+
+create policy "Users can insert their own todos"
+  on public.todos for insert with check (auth.uid() = user_id);
+
+create policy "Users can update their own todos"
+  on public.todos for update using (auth.uid() = user_id);
+
+create policy "Users can delete their own todos"
+  on public.todos for delete using (auth.uid() = user_id);
+```
+
+The project URL and publishable key live in `src/lib/supabase.ts`.
+
+## Deployment
+
+Every push to `main` runs `.github/workflows/deploy.yml`, which builds the app and publishes it to GitHub Pages.

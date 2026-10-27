@@ -1,5 +1,6 @@
-import { isWeekdayKey, type Todo, type WeekdayKey } from "../domain/todo";
-import { supabase } from "./supabaseClient";
+import { supabase } from "@/lib/supabase";
+import type { Todo, WeekdayKey } from "../types";
+import { isWeekdayKey } from "../utils/todo";
 
 type TodoRow = {
   id: string;

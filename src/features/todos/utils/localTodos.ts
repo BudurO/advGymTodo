@@ -1,4 +1,4 @@
-import type { Todo } from "../domain/todo";
+import type { Todo } from "../types";
 
 // Legacy localStorage persistence. Only used to migrate previously saved
 // tasks into the database the first time a user signs in on this device.

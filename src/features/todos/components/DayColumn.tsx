@@ -1,4 +1,4 @@
-import type { Todo, Weekday } from "../domain/todo";
+import type { Todo, Weekday } from "../types";
 import { TaskCard } from "./TaskCard";
 
 export function DayColumn({

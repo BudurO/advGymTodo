@@ -1,6 +1,6 @@
-import type { Todo } from "../domain/todo";
-import { Draggable } from "./dnd/Draggable";
-import { taskDragId } from "./dnd/ids";
+import { Draggable } from "@/components/dnd/Draggable";
+import type { Todo } from "../types";
+import { taskDragId } from "../utils/dragIds";
 
 export function TaskCard({
   task,

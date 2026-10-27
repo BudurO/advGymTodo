@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { createTodo, type Todo, type WeekdayKey } from "../domain/todo";
 import {
   deleteTodoRow,
   fetchTodos,
   insertTodos,
   updateTodoCompleted,
   updateTodoDay,
-} from "../services/todoRepo";
-import { clearLocalTodos, loadLocalTodos } from "../services/todoStorage";
+} from "../api/todos";
+import type { Todo, WeekdayKey } from "../types";
+import { clearLocalTodos, loadLocalTodos } from "../utils/localTodos";
+import { createTodo } from "../utils/todo";
 
 export function useTodos(userId: string) {
   const [todos, setTodos] = useState<Todo[]>([]);

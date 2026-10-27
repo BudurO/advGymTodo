@@ -1,14 +1,11 @@
 import { DragDropProvider } from "@dnd-kit/react";
-import {
-  isWeekdayKey,
-  WEEKDAYS,
-  type Todo,
-  type WeekdayKey,
-} from "../domain/todo";
+import { Droppable } from "@/components/dnd/Droppable";
+import { WEEKDAYS } from "../constants";
+import type { Todo, WeekdayKey } from "../types";
+import { parseTaskDragId, UNASSIGNED_DROP_ID } from "../utils/dragIds";
+import { isWeekdayKey } from "../utils/todo";
 import { DayColumn } from "./DayColumn";
 import { TaskCard } from "./TaskCard";
-import { Droppable } from "./dnd/Droppable";
-import { parseTaskDragId, UNASSIGNED_DROP_ID } from "./dnd/ids";
 
 export function TodoBoard({
   todos,

@@ -1,10 +1,9 @@
-import "./App.css";
-import { AddTodoForm } from "./components/AddTodoForm";
-import { AuthForm } from "./components/AuthForm";
-import { TodoBoard } from "./components/TodoBoard";
-import { useAuth } from "./hooks/useAuth";
-import { useTodos } from "./hooks/useTodos";
-import { isSupabaseConfigured } from "./services/supabaseClient";
+import { AuthForm } from "@/features/auth/components/AuthForm";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { AddTodoForm } from "@/features/todos/components/AddTodoForm";
+import { TodoBoard } from "@/features/todos/components/TodoBoard";
+import { useTodos } from "@/features/todos/hooks/useTodos";
+import { isSupabaseConfigured } from "@/lib/supabase";
 
 function App() {
   const { session, loading, signIn, signUp, signOut } = useAuth();
@@ -35,7 +34,7 @@ function App() {
         {!isSupabaseConfigured ? (
           <p className="mx-auto max-w-md rounded-2xl border border-amber-300 bg-amber-50 p-4 text-center text-sm text-amber-700">
             Supabase is not configured yet — paste your project URL and anon
-            key into <code>src/services/supabaseClient.ts</code>.
+            key into <code>src/lib/supabase.ts</code>.
           </p>
         ) : loading ? (
           <p className="text-center text-sm text-pink-400">Loading…</p>
